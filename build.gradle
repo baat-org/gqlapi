@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    id 'com.gradle.build-scan' version '2.0.2'
+    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+}
+
+repositories {
+    jcenter()
+    mavenLocal()
+}
+
+ext {
+    springBootVersion = '2.0.5.RELEASE'
+    commonsLang3Version = '3.4'
+    mySQLConnectorVersion = '5.1.44'
+    junitVersion = '4.12'
+    baatCoreVersion = '1.0'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-dependencies:${project.springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web:${project.springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-amqp:${project.springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${project.springBootVersion}"
+    implementation "org.apache.commons:commons-lang3:${project.commonsLang3Version}"
+    implementation "mysql:mysql-connector-java:${project.mySQLConnectorVersion}"
+    implementation "org.baat:core:${project.baatCoreVersion}"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${project.springBootVersion}"
+    testImplementation "junit:junit:${project.junitVersion}"
+
+    components {
+        withModule('org.springframework:spring-beans') {
+            allVariants {
+                withDependencyConstraints {
+                    // Need to patch constraints because snakeyaml is an optional dependency
+                    it.findAll { it.name == 'snakeyaml' }.each { it.version { strictly '1.19' } }
+                }
+            }
+        }
+    }
+}
+
+buildScan {
+
+    // always accept the terms of service
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+
+    // always publish a build scan
+    publishAlways()
+}
+
+bootJar {
+    mainClassName = 'org.baat.gql_api.application.GQLApplication'
+}
+
