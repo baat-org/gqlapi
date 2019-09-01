@@ -13,7 +13,6 @@ repositories {
 ext {
     springBootVersion = '2.0.5.RELEASE'
     commonsLang3Version = '3.4'
-    mySQLConnectorVersion = '5.1.44'
     junitVersion = '4.12'
     baatCoreVersion = '1.0'
 }
@@ -24,10 +23,7 @@ targetCompatibility = 1.8
 dependencies {
     implementation "org.springframework.boot:spring-boot-dependencies:${project.springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-web:${project.springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-amqp:${project.springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa:${project.springBootVersion}"
     implementation "org.apache.commons:commons-lang3:${project.commonsLang3Version}"
-    implementation "mysql:mysql-connector-java:${project.mySQLConnectorVersion}"
     implementation "org.baat:core:${project.baatCoreVersion}"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test:${project.springBootVersion}"
