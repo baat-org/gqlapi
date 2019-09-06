@@ -12,8 +12,8 @@ repositories {
 
 ext {
     springBootVersion = '2.0.5.RELEASE'
-    gqlSpringBootVersion = '5.10.0'
-    gqlJavaToolsVersion = '5.6.1'
+    gqlSpringBootVersion = '5.0.2'
+    gqlJavaToolsVersion = '5.2.4'
     commonsLang3Version = '3.4'
     junitVersion = '4.12'
     baatCoreVersion = '1.0'
@@ -26,6 +26,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-dependencies:${project.springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-web:${project.springBootVersion}"
     implementation "com.graphql-java:graphql-spring-boot-starter:${project.gqlSpringBootVersion}"
+    implementation "com.graphql-java:graphiql-spring-boot-starter:${project.gqlSpringBootVersion}"
     implementation "com.graphql-java:graphql-java-tools:${project.gqlJavaToolsVersion}"
     implementation "org.apache.commons:commons-lang3:${project.commonsLang3Version}"
     implementation "org.baat:core:${project.baatCoreVersion}"
