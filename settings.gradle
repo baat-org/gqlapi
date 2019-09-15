@@ -1,2 +1,2 @@
-rootProject.name = 'gql_api'
+rootProject.name = 'gqlapi'
 enableFeaturePreview('IMPROVED_POM_SUPPORT')
