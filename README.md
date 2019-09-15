@@ -1,4 +1,4 @@
-# gql_api
+# gqlapi
 GraphQL API
 
 ```

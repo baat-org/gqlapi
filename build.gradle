@@ -57,6 +57,6 @@ buildScan {
 }
 
 bootJar {
-    mainClassName = 'org.baat.gql_api.application.GQLApplication'
+    mainClassName = 'org.baat.gqlapi.application.GQLApplication'
 }
 
