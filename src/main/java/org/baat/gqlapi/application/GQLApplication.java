@@ -1,4 +1,4 @@
-package org.baat.gql_api.application;
+package org.baat.gqlapi.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

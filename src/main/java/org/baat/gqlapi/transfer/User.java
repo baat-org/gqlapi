@@ -1,4 +1,4 @@
-package org.baat.gql_api.transfer;
+package org.baat.gqlapi.transfer;
 
 public class User {
 

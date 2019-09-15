@@ -1,8 +1,7 @@
-package org.baat.gql_api.service;
+package org.baat.gqlapi.service;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.google.common.collect.Lists;
-import org.baat.gql_api.transfer.User;
+import org.baat.gqlapi.transfer.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

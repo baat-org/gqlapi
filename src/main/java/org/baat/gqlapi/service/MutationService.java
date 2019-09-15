@@ -1,4 +1,4 @@
-package org.baat.gql_api.service;
+package org.baat.gqlapi.service;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import org.baat.core.transfer.chat.ChatMessage;
