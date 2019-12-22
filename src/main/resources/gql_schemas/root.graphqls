@@ -1,7 +1,6 @@
 type Query {
-    users: [User]!
+    users(userToken: String!): [User]!
     userForToken(userToken: String!): User
-    userTokens(userId: Int): [String]!
 }
 
 type Mutation {

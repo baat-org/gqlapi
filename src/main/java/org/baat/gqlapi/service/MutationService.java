@@ -39,6 +39,8 @@ public class MutationService implements GraphQLMutationResolver {
     }
 
     public Boolean chat(final String senderUserToken, final Long recipientChannelId, final Long recipientUserId, final String textMessage) {
+        validateUserToken(senderUserToken);
+
         new RestTemplate().put(URI.create(chatServiceURI + "/"), new ChatMessage(senderUserToken, recipientChannelId, recipientUserId, textMessage));
         return true;
     }
