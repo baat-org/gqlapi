@@ -19,7 +19,7 @@ public class QueryService implements GraphQLQueryResolver {
     private String userServiceURI;
 
     public List<User> getUsers(final String userToken) {
-        validUserToken(userToken);
+        validateUserToken(userToken);
 
         return new RestTemplate().exchange(
                 URI.create(userServiceURI + "/users/"), HttpMethod.GET, null, new ParameterizedTypeReference<List<User>>() {
@@ -27,14 +27,16 @@ public class QueryService implements GraphQLQueryResolver {
     }
 
     public User getUserForToken(final String userToken) {
-        validUserToken(userToken);
+        validateUserToken(userToken);
 
         return new RestTemplate().getForObject(
                 URI.create(userServiceURI + "/userForToken/" + userToken), User.class);
     }
 
-    private boolean validUserToken(final String userToken) {
-        return BooleanUtils.isTrue(new RestTemplate().getForObject(
-                URI.create(userServiceURI + "/validateUserToken/" + userToken), Boolean.class));
+    private void validateUserToken(final String userToken) {
+        if (!BooleanUtils.isTrue(new RestTemplate().getForObject(
+                URI.create(userServiceURI + "/validateUserToken/" + userToken), Boolean.class))) {
+            throw new IllegalStateException("Unauthorised user access");
+        }
     }
 }

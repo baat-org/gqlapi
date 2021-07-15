@@ -1,9 +1,11 @@
 package org.baat.gqlapi.service;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import org.apache.commons.lang3.BooleanUtils;
 import org.baat.core.transfer.chat.ChatMessage;
 import org.baat.core.transfer.user.SignupRequest;
 import org.baat.core.transfer.user.UserCredentials;
+import org.baat.core.transfer.user.UserInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
@@ -33,16 +35,27 @@ public class MutationService implements GraphQLMutationResolver {
                 String.class).getBody();
     }
 
-    public Boolean validateUserToken(final String userToken) {
-        return new RestTemplate().getForObject(
-                URI.create(userServiceURI + "/validateUserToken/" + userToken), Boolean.class);
-    }
-
     public Boolean chat(final String senderUserToken, final Long recipientChannelId, final Long recipientUserId, final String textMessage) {
         validateUserToken(senderUserToken);
 
-        new RestTemplate().put(URI.create(chatServiceURI + "/"), new ChatMessage(senderUserToken, recipientChannelId, recipientUserId, textMessage));
-        return true;
+        final UserInfo userInfo = findUserForToken(senderUserToken);
+        if (userInfo != null) {
+            new RestTemplate().put(URI.create(chatServiceURI + "/"), new ChatMessage(userInfo.getId(), recipientChannelId, recipientUserId, textMessage));
+            return true;
+        }
+
+        return false;
     }
 
+    private void validateUserToken(final String userToken) {
+        if (!BooleanUtils.isTrue(new RestTemplate().getForObject(
+                URI.create(userServiceURI + "/validateUserToken/" + userToken), Boolean.class))) {
+            throw new IllegalStateException("Unauthorised user access");
+        }
+    }
+
+    private UserInfo findUserForToken(final String userToken) {
+        return new RestTemplate().getForObject(
+                URI.create(userServiceURI + "/userForToken/" + userToken), UserInfo.class);
+    }
 }
