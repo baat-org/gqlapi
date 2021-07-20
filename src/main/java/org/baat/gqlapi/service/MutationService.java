@@ -40,7 +40,7 @@ public class MutationService implements GraphQLMutationResolver {
 
         final UserInfo userInfo = findUserForToken(senderUserToken);
         if (userInfo != null) {
-            new RestTemplate().put(URI.create(chatServiceURI + "/"), new ChatMessage(userInfo.getId(), recipientChannelId, recipientUserId, textMessage));
+            new RestTemplate().put(URI.create(chatServiceURI + "/"), new ChatMessage(null, userInfo.getId(), recipientChannelId, recipientUserId, textMessage, null));
             return true;
         }
 
