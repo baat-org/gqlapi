@@ -5,7 +5,7 @@ type Query {
 
 type Mutation {
     authenticate(userName: String!, password: String!) : String!
+    authorize(userToken: String!) : Boolean!
     signup(email: String!, name: String!, password: String!, avatarUrl: String) : String!
-    validateUserToken(userToken: String!) : Boolean!
     chat(senderUserToken: String!, recipientChannelId: Int, recipientUserId: Int, textMessage: String!): Boolean!
 }

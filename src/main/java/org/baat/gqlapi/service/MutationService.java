@@ -29,6 +29,11 @@ public class MutationService implements GraphQLMutationResolver {
                 String.class).getBody();
     }
 
+    public Boolean authorize(final String userToken) {
+        return new RestTemplate().getForObject(
+                URI.create(userServiceURI + "/validateUserToken/" + userToken), Boolean.class);
+    }
+
     public String signup(final String email, final String name, final String password, final String avatarUrl) {
         return new RestTemplate().exchange(
                 URI.create(userServiceURI + "/signup/"), PUT, new HttpEntity<>(new SignupRequest(email, name, avatarUrl, password)),
