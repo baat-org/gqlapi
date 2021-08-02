@@ -1,6 +1,9 @@
 type Query {
     users(userToken: String!): [User]!
     userForToken(userToken: String!): User
+    channels(userToken: String!): [Channel]!
+    channelsForUser(userToken: String!): [Channel]!
+    directsForUser(userToken: String!): [User]!
 }
 
 type Mutation {
@@ -8,4 +11,9 @@ type Mutation {
     authorize(userToken: String!) : Boolean!
     signup(email: String!, name: String!, password: String!, avatarUrl: String) : String!
     chat(senderUserToken: String!, recipientChannelId: Int, recipientUserId: Int, textMessage: String!): Boolean!
+    createChannel(userToken: String!, name: String!, description: String): Int!
+    updateChannel(userToken: String!, channelId: Int!, name: String!, description: String): Boolean!
+    archiveChannel(userToken: String!, channelId: Int!): Boolean!
+    createDirect(userToken: String!, secondUserId: Int!): Boolean!
+    removeDirect(userToken: String!, secondUserId: Int!): Boolean!
 }

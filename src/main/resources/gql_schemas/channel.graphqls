@@ -1,0 +1,6 @@
+type Channel {
+    id: ID!
+    name: String!
+    description: String
+    archived: Boolean
+}

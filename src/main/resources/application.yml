@@ -2,3 +2,4 @@ server:
   port: 8080
 user_service_uri: ${USER_SERVICE_URI}
 chat_service_uri: ${CHAT_SERVICE_URI}
+channel_service_uri: ${CHANNEL_SERVICE_URI}
