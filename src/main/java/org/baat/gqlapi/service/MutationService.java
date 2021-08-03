@@ -8,12 +8,19 @@ import org.baat.core.transfer.chat.ChatMessage;
 import org.baat.core.transfer.user.SignupRequest;
 import org.baat.core.transfer.user.UserCredentials;
 import org.baat.core.transfer.user.UserInfo;
+import org.baat.gqlapi.transfer.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -81,12 +88,39 @@ public class MutationService implements GraphQLMutationResolver {
                 Boolean.class).getBody();
     }
 
+    public Boolean addUsersToChannel(final String userToken, final Long channelId, final List<String> emails) {
+        validateUserToken(userToken);
+
+        // TODO improve this logic by making a call to user controller passing emails & even cache users
+        final List<User> allUsers = getUsers();
+        final Set<Long> userIdsToAdd = allUsers.stream().filter(user -> emails.contains(user.getEmail())).map(User::getId).collect(Collectors.toSet());
+
+        return new RestTemplate().exchange(
+                URI.create(channelServiceURI + "/channels/" + channelId + "/users"), PUT, new HttpEntity<>(userIdsToAdd),
+                Boolean.class).getBody();
+    }
+
+    public Boolean removeUserFromChannel(final String userToken, final Long channelId, final String email) {
+        validateUserToken(userToken);
+
+        // TODO improve this logic by making a call to user controller passing emails & even cache users
+        final List<User> allUsers = getUsers();
+        final Optional<User> foundUser = allUsers.stream().filter(user -> email.equals(user.getEmail())).findAny();
+        if (foundUser.isPresent()) {
+            return new RestTemplate().exchange(
+                    URI.create(channelServiceURI + "/channels/" + channelId + "/users/" + foundUser.get().getId()), DELETE, null,
+                    Boolean.class).getBody();
+        } else {
+            throw new IllegalStateException("Invalid User");
+        }
+    }
+
     public Boolean createDirect(final String userToken, final Long secondUserId) {
         validateUserToken(userToken);
 
         final UserInfo userInfo = findUserForToken(userToken);
 
-
+        //TODO validate secondUserId is a valid user
         return new RestTemplate().exchange(
                 URI.create(channelServiceURI + "/directs"), POST, new HttpEntity<>(new Direct(userInfo.getId(), secondUserId)),
                 Boolean.class).getBody();
@@ -97,12 +131,13 @@ public class MutationService implements GraphQLMutationResolver {
 
         final UserInfo userInfo = findUserForToken(userToken);
 
-
+        //TODO validate secondUserId is a valid user
         return new RestTemplate().exchange(
                 URI.create(channelServiceURI + "/directs"), DELETE, new HttpEntity<>(new Direct(userInfo.getId(), secondUserId)),
                 Boolean.class).getBody();
     }
 
+    // TODO turn this into an aspect?
     private void validateUserToken(final String userToken) {
         if (!BooleanUtils.isTrue(new RestTemplate().getForObject(
                 URI.create(userServiceURI + "/validateUserToken/" + userToken), Boolean.class))) {
@@ -114,4 +149,11 @@ public class MutationService implements GraphQLMutationResolver {
         return new RestTemplate().getForObject(
                 URI.create(userServiceURI + "/userForToken/" + userToken), UserInfo.class);
     }
+
+    private List<User> getUsers() {
+        return new RestTemplate().exchange(
+                URI.create(userServiceURI + "/users/"), HttpMethod.GET, null, new ParameterizedTypeReference<List<User>>() {
+                }).getBody();
+    }
+
 }

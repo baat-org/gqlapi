@@ -14,6 +14,8 @@ type Mutation {
     createChannel(userToken: String!, name: String!, description: String): Int!
     updateChannel(userToken: String!, channelId: Int!, name: String!, description: String): Boolean!
     archiveChannel(userToken: String!, channelId: Int!): Boolean!
+    addUsersToChannel(userToken: String!, channelId: Int!, emails: [String]!): Boolean!
+    removeUserFromChannel(userToken: String!, channelId: Int!, email: String!): Boolean!
     createDirect(userToken: String!, secondUserId: Int!): Boolean!
     removeDirect(userToken: String!, secondUserId: Int!): Boolean!
 }
